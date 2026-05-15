@@ -1,5 +1,6 @@
     #pragma once
     //#define LOG_
+    #include <stdint.h>
     #include <iostream>
     #include <vector>
     #include <map>
@@ -66,6 +67,7 @@
             }
             void tick() {
                 if (!commited) return;
+                // WIP this is temporary
                 for (auto& g : internal_gates) {
                     this->updateInterface();
                     if (g.invert) PMOS(internal_wires[g.source], internal_wires[g.gate], &internal_wires[g.drain]);
