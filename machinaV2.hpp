@@ -6,7 +6,7 @@
     #include <map>
     #include <any>
     using SIGNAL = unsigned char;
-
+    #define WIP std::cout << "WIP" << std::endl;
     namespace machinaV2 {    
         SIGNAL PMOS(SIGNAL source , SIGNAL gate) {
             SIGNAL drain = (!(gate >> 7)) ? ((source > 1) ?  source : 0) : 0;
@@ -29,7 +29,7 @@
             return drain;
         }
         void PMOS(SIGNAL source , SIGNAL gate , SIGNAL *drain) {
-            *drain = (!(gate >> 7)) ? ((source > 1) ?  source - 1 : 0) : 0;
+            *drain = (!(gate >> 7)) ? ((source > 1) ?  source : 0) : 0;
             #ifdef LOG_
             std::cout << "P-MOS\n" << 
             "source: " << std::hex << (int)source << '\n' <<
@@ -38,7 +38,7 @@
             #endif
         }
         void NMOS(SIGNAL source , SIGNAL gate , SIGNAL* drain) {
-            *drain = ((gate >> 7)) ? ((source > 1) ?  source - 1 : 0) : 0;
+            *drain = ((gate >> 7)) ? ((source > 1) ?  source : 0) : 0;
             #ifdef LOG_
             std::cout << "N-MOS\n" <<
             "source: " << std::hex << (int)source << '\n' <<
@@ -67,7 +67,8 @@
             }
             void tick() {
                 if (!commited) return;
-                // WIP this is temporary
+                WIP
+                // temporary behavior
                 for (auto& g : internal_gates) {
                     this->updateInterface();
                     if (g.invert) PMOS(internal_wires[g.source], internal_wires[g.gate], &internal_wires[g.drain]);
@@ -81,6 +82,8 @@
             void map(SIGNAL* interface , size_t internal_index) {
                 if (commited) return;
                 // now working on this
+                WIP
+
             }
             void wire(size_t gate_index , cmos_pin pin , size_t internal_index) {
                 if (commited) return;
