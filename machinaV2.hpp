@@ -2,11 +2,13 @@
     //#define LOG_
     #include <stdint.h>
     #include <iostream>
+    #include <optional>
     #include <vector>
     #include <map>
     #include <any>
     using SIGNAL = unsigned char;
     #define WIP std::cout << "WIP" << std::endl;
+    namespace ivn {
     namespace machinaV2 {    
         SIGNAL PMOS(SIGNAL source , SIGNAL gate) {
             SIGNAL drain = (!(gate >> 7)) ? ((source > 1) ?  source : 0) : 0;
@@ -62,45 +64,72 @@
             public:
             std::vector<SIGNAL*> interface_wires;
             std::map<size_t , SIGNAL*> wire_mapping;
-            void updateInterface(size_t wire_index) {
+            void readInterface(size_t wire_index) {
                 if (!wire_mapping.count(wire_index)) return;
-                // currently working on this
-                *(wire_mapping[wire_index]) = internal_wires[wire_index]; 
+                if (wire_index >= internal_wires.size()) return;
+                internal_wires[wire_index] = *wire_mapping[wire_index];
+            }
+
+            void writeInterface(size_t wire_index) {
+                if (!wire_mapping.count(wire_index)) return;
+                if (wire_index >= internal_wires.size()) return;
+                *wire_mapping[wire_index] = internal_wires[wire_index];
             }
             void tick() {
                 if (!commited) return;
-                WIP
-                // temporary behavior
+                // read all mapped interface wires into internal state
+                for (auto const& [wire_index, ptr] : wire_mapping) {
+                    readInterface(wire_index);
+                }
+
+                // evaluate all gates
                 for (auto& g : internal_gates) {
-                    this->updateInterface(g.source);
-                    this->updateInterface(g.drain);
-                    this->updateInterface(g.gate);
-                    if (g.invert) 
-                    PMOS(internal_wires[g.source], internal_wires[g.gate], &internal_wires[g.drain]);
-                    else 
-                    NMOS(internal_wires[g.source], internal_wires[g.gate], &internal_wires[g.drain]);
+                    if (g.invert)
+                        PMOS(internal_wires[g.source], internal_wires[g.gate], &internal_wires[g.drain]);
+                    else
+                        NMOS(internal_wires[g.source], internal_wires[g.gate], &internal_wires[g.drain]);
+                }
+
+                // write internal state back to mapped interface wires
+                for (auto const& [wire_index, ptr] : wire_mapping) {
+                    writeInterface(wire_index);
                 }
             }
             void commit() {
                 if (commited) return;
                 commited = true;
             }
-            void map(SIGNAL* interface , size_t internal_index) {
+            void map(SIGNAL* interface_wire , size_t internal_index) {
                 if (commited) return;
-                if (internal_wires.size() < internal_index) return;
-                wire_mapping[internal_index] = interface;
+                if (internal_index >= internal_wires.size()) return;
+                wire_mapping[internal_index] = interface_wire;
             }
             void wire(size_t gate_index , cmos_pin pin , size_t internal_index) {
-                WIP
                 if (commited) return;
-                // TODO LATER
-                if (gate_index > internal_gates.size()) return;
-                if (internal_index > internal_wires.size()) return;
+                if (gate_index >= internal_gates.size()) return;
+                if (internal_index >= internal_wires.size()) return;
 
-                internal_gates[gate_index];
+                auto& g = internal_gates[gate_index];
+                switch (pin) {
+                    case cmos_pin::drain:
+                        g.drain = internal_index;
+                        break;
+                    case cmos_pin::control:
+                        g.gate = internal_index;
+                        break;
+                    case cmos_pin::source:
+                        g.source = internal_index;
+                        break;
+                }
             }
-            size_t addGate(size_t drain , size_t control , size_t source ,bool isN) {
-                if (commited) return 0;
+            std::optional<size_t> addWire() {
+                if (commited) return std::nullopt;
+                SIGNAL s = 0;
+                internal_wires.push_back(s);
+                return internal_wires.size() - 1;
+            }
+            std::optional<size_t> addGate(size_t drain , size_t control , size_t source ,bool isN) {
+                if (commited) return std::nullopt;
                 Gate g;
                 g.invert = isN;
                 g.drain = drain;
@@ -113,3 +142,4 @@
         };
 
     }
+}
