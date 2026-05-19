@@ -1,53 +1,28 @@
+#include <cstdlib>
 #include <iostream>
 #include "machinaV2.hpp"
 #include <windows.h>
-
+#include "interpreter/CLIparser.hpp"
 bool Tick(DWORD tps) {
     Sleep(1000 / tps);
     return true;
 }
 
-struct GraphDevice : ivn::machinaV2::device {
-    GraphDevice(SIGNAL* inputA, SIGNAL* inputB, SIGNAL* output) {
-        auto wa = addWire();
-        auto wb = addWire();
-        auto wout = addWire();
-        if (!wa || !wb || !wout) return;
 
-        map(inputA, *wa);
-        map(inputB, *wb);
-        map(output, *wout);
-
-        addGate(*wout, *wb, *wa, false); // NMOS pass when gate is high
-        commit();
+int main(int argument_count , char** argument_vector) {
+    ivn::argument arg(argument_vector + 1);
+    std::cout << "flags\n";
+    for (auto& flag : arg.flags) {
+        std::cout << '\t' << flag << '\n';
     }
-
-    void setup(const std::string& format, const std::vector<std::any>& args) override {
-        (void)format;
-        (void)args;
+    std::cout << "options" << '\n';
+    for (auto& pair : arg.options) {
+        std::cout << '\t' << pair.first << " -> " << pair.second << '\n';
     }
-};
-
-int main() {
-    SIGNAL inputA = 0;
-    SIGNAL inputB = 0;
-    SIGNAL output = 0;
-
-    GraphDevice device(&inputA, &inputB, &output);
-
-    int step = 0;
-    while (Tick(1)) {
-        inputA = (step % 2 == 0) ? 0xFF : 0x00;
-        inputB = 0x80; // gate high
-
-        device.tick();
-
-        std::cout << "step=" << step
-                  << " A=" << (inputA ? 1 : 0)
-                  << " B=" << (inputB ? 1 : 0)
-                  << " out=" << (output ? 1 : 0)
-                  << std::endl;
-        ++step;
+    std::cout << "ungrouped" << '\n';
+    for (auto& element : arg.positional) {
+        std::cout << '\t' << element << "\n";
     }
-
+    while (Tick(std::rand() % 145)) std::cout << "tick\n";
+    return 0;
 }

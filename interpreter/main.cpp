@@ -13,9 +13,10 @@ int main(int c, char** argv) {
         std::cout << '\t' << pair.first << " -> " << pair.second << '\n';
     }
     std::cout << "ungrouped" << '\n';
-    for (auto& element : arg.ungrouped) {
+    for (auto& element : arg.positional) {
         std::cout << '\t' << element << "\n";
     }
     std::println("test");
     //use arg
 }
+	

@@ -1,0 +1,29 @@
+// SimpleChip.cbp DEMO
+new Wire
+new Wire
+new Wire
+new Wire
+pop TMP
+pop A
+pop B
+pop OUT
+map A 2
+map B 3
+map OUT 4
+new PMOS
+new PMOS
+pop G_1
+pop G_2
+new Wire
+new Wire
+pop VSS
+pop VDD
+map VSS 0
+map VDD 1
+link G_1 VSS SOURCE
+link G_2 A CONTROL
+link G_1 B CONTROL
+link G_2 OUT DRAIN
+link G_2 TMP SOURCE
+link G_1 TMP DRAIN
+lock
