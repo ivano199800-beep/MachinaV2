@@ -16,7 +16,7 @@ int main(int c, char** argv) {
     for (auto& element : arg.positional) {
         std::cout << '\t' << element << "\n";
     }
-    std::println("test");
+    //std::println("test");
     //use arg
 }
 	

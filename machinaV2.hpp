@@ -1,7 +1,7 @@
 #include <cstdint>
 #include <vector>
 #include <map>
-
+#include <optional>
 namespace ivn {
     using idx_t = size_t;
     namespace machinaV2 {
@@ -25,16 +25,54 @@ namespace ivn {
         }
         class chip {
             private:
-                std::vector<cmos::SIGNAL> internal_wires;
-                std::vector<cmos::SIGNAL*> interface_wires;
-                std::vector<cmos::transistor> internal_transistors;
+                std::vector<cmos::SIGNAL> internal_wires = {0};
+                std::vector<cmos::SIGNAL*> interface_wires = {0};
+                std::vector<cmos::transistor> internal_transistors = {{0}};
                 std::map<idx_t , idx_t> interface_mappings;
             public:
-                idx_t addWire() {}
-                idx_t addTransistor() {}
-                void bindTransistor(idx_t transistor , idx_t internal__wire , cmos::transistor::pin pin) {}
-                void mapWire(idx_t internal_wire  , idx_t interface_wire) {}
-                void evaluate(unsigned long long flags) {}
+                idx_t addWire() {
+                    internal_wires.push_back(0);
+                    return internal_wires.size()- 1;
+                }
+                idx_t addTransistor(char type) {
+                    internal_transistors.push_back((cmos::transistor){.type = type & 1});
+                    return internal_transistors.size() - 1;
+                }
+                void bindTransistor(idx_t transistor , idx_t internal_wire , cmos::transistor::pin pin) {
+                    auto & t = internal_transistors[transistor];
+                    switch (pin) {
+                        case cmos::transistor::pin::control:
+                            t.control = internal_wire;
+                            break;
+                        case cmos::transistor::pin::drain:
+                            t.drain = internal_wire;
+                            break;
+                        case cmos::transistor::pin::source:
+                            t.source = internal_wire;
+                            break;
+                        default:
+                            break;
+                    }
+                    return;
+                }
+                void mapWire(idx_t internal_wire  , idx_t interface_wire) {
+                    interface_mappings[internal_wire] = interface_wire;
+                }
+                void pull_mapped(idx_t internal_wire) {
+                    idx_t mw = interface_mappings[internal_wire];
+                    auto m = interface_wires[mw];
+                    if (!m) return;
+                    internal_wires[internal_wire] = *m;
+                }
+                void push_mapped(idx_t internal_wire) {
+                    idx_t mw = interface_mappings[internal_wire];
+                    auto m = interface_wires[mw];
+                    if (!m) return;
+                    *m = internal_wires[internal_wire];
+                }
+                void evaluate(unsigned long long flags) {
+
+                }
         };
     }
 }
