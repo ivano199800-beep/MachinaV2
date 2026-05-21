@@ -25,21 +25,28 @@ namespace ivn {
         }
         class chip {
             private:
+		bool commitf;
                 std::vector<cmos::SIGNAL> internal_wires = {0};
                 std::vector<cmos::SIGNAL*> interface_wires = {0};
                 std::vector<cmos::transistor> internal_transistors = {{0}};
                 std::map<idx_t , idx_t> interface_mappings;
             public:
+		void commit() {
+			if (!commitf) commitf = true;
+		}
                 idx_t addWire() {
+		    if (commitf) return 0; 
                     internal_wires.push_back(0);
                     return internal_wires.size()- 1;
                 }
                 idx_t addTransistor(char type) {
+		    if (commitf) return 0;
                     internal_transistors.push_back((cmos::transistor){.type = type & 1});
                     return internal_transistors.size() - 1;
                 }
                 void bindTransistor(idx_t transistor , idx_t internal_wire , cmos::transistor::pin pin) {
-                    auto & t = internal_transistors[transistor];
+                    if (commitf) return;
+		    auto & t = internal_transistors[transistor];
                     switch (pin) {
                         case cmos::transistor::pin::control:
                             t.control = internal_wire;
@@ -56,15 +63,18 @@ namespace ivn {
                     return;
                 }
                 void mapWire(idx_t internal_wire  , idx_t interface_wire) {
+		    if (commitf) return;
                     interface_mappings[internal_wire] = interface_wire;
                 }
                 void pull_mapped(idx_t internal_wire) {
+		    if (commitf) return;
                     idx_t mw = interface_mappings[internal_wire];
                     auto m = interface_wires[mw];
                     if (!m) return;
                     internal_wires[internal_wire] = *m;
                 }
                 void push_mapped(idx_t internal_wire) {
+		    if (commitf) return;
                     idx_t mw = interface_mappings[internal_wire];
                     auto m = interface_wires[mw];
                     if (!m) return;

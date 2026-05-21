@@ -19,7 +19,7 @@ int main(int argument_count , char** argument_vector) {
     for (auto& pair : arg.options) {
         std::cout << '\t' << pair.first << " -> " << pair.second << '\n';
     }
-    std::cout << "ungrouped" << '\n';
+    std::cout << "positional" << '\n';
     for (auto& element : arg.positional) {
         std::cout << '\t' << element << "\n";
     }

@@ -1,29 +1,312 @@
-// SimpleChip.cbp DEMO
-new Wire
-new Wire
-new Wire
-new Wire
-pop TMP
-pop A
-pop B
-pop OUT
-map A 2
-map B 3
-map OUT 4
-new PMOS
-new PMOS
-pop G_1
-pop G_2
-new Wire
 new Wire
 pop VSS
-pop VDD
 map VSS 0
+new Wire
+pop VDD
 map VDD 1
-link G_1 VSS SOURCE
-link G_2 A CONTROL
-link G_1 B CONTROL
-link G_2 OUT DRAIN
-link G_2 TMP SOURCE
-link G_1 TMP DRAIN
+new Wire
+pop A
+map A 2
+new Wire
+pop B
+map B 3
+new Wire
+pop Cin
+map Cin 4
+new Wire
+pop Sum
+map Sum 5
+new Wire
+pop Cout
+map Cout 6
+new Wire
+pop nab_mid
+new Wire
+pop nab
+new PMOS
+pop nab_p1
+new PMOS
+pop nab_p2
+new NMOS
+pop nab_n1
+new NMOS
+pop nab_n2
+link nab_p1 VDD SOURCE
+link nab_p1 A CONTROL
+link nab_p1 nab DRAIN
+link nab_p2 VDD SOURCE
+link nab_p2 B CONTROL
+link nab_p2 nab DRAIN
+link nab_n1 nab SOURCE
+link nab_n1 A CONTROL
+link nab_n1 nab_mid DRAIN
+link nab_n2 nab_mid SOURCE
+link nab_n2 B CONTROL
+link nab_n2 VSS DRAIN
+new Wire
+pop na_mid
+new Wire
+pop na
+new PMOS
+pop na_p1
+new PMOS
+pop na_p2
+new NMOS
+pop na_n1
+new NMOS
+pop na_n2
+link na_p1 VDD SOURCE
+link na_p1 A CONTROL
+link na_p1 na DRAIN
+link na_p2 VDD SOURCE
+link na_p2 A CONTROL
+link na_p2 na DRAIN
+link na_n1 na SOURCE
+link na_n1 A CONTROL
+link na_n1 na_mid DRAIN
+link na_n2 na_mid SOURCE
+link na_n2 A CONTROL
+link na_n2 VSS DRAIN
+new Wire
+pop nb_mid
+new Wire
+pop nb
+new PMOS
+pop nb_p1
+new PMOS
+pop nb_p2
+new NMOS
+pop nb_n1
+new NMOS
+pop nb_n2
+link nb_p1 VDD SOURCE
+link nb_p1 B CONTROL
+link nb_p1 nb DRAIN
+link nb_p2 VDD SOURCE
+link nb_p2 B CONTROL
+link nb_p2 nb DRAIN
+link nb_n1 nb SOURCE
+link nb_n1 B CONTROL
+link nb_n1 nb_mid DRAIN
+link nb_n2 nb_mid SOURCE
+link nb_n2 B CONTROL
+link nb_n2 VSS DRAIN
+new Wire
+pop t1_mid
+new Wire
+pop t1
+new PMOS
+pop t1_p1
+new PMOS
+pop t1_p2
+new NMOS
+pop t1_n1
+new NMOS
+pop t1_n2
+link t1_p1 VDD SOURCE
+link t1_p1 A CONTROL
+link t1_p1 t1 DRAIN
+link t1_p2 VDD SOURCE
+link t1_p2 nab CONTROL
+link t1_p2 t1 DRAIN
+link t1_n1 t1 SOURCE
+link t1_n1 A CONTROL
+link t1_n1 t1_mid DRAIN
+link t1_n2 t1_mid SOURCE
+link t1_n2 nab CONTROL
+link t1_n2 VSS DRAIN
+new Wire
+pop t2_mid
+new Wire
+pop t2
+new PMOS
+pop t2_p1
+new PMOS
+pop t2_p2
+new NMOS
+pop t2_n1
+new NMOS
+pop t2_n2
+link t2_p1 VDD SOURCE
+link t2_p1 B CONTROL
+link t2_p1 t2 DRAIN
+link t2_p2 VDD SOURCE
+link t2_p2 nab CONTROL
+link t2_p2 t2 DRAIN
+link t2_n1 t2 SOURCE
+link t2_n1 B CONTROL
+link t2_n1 t2_mid DRAIN
+link t2_n2 t2_mid SOURCE
+link t2_n2 nab CONTROL
+link t2_n2 VSS DRAIN
+new Wire
+pop axb_mid
+new Wire
+pop axb
+new PMOS
+pop axb_p1
+new PMOS
+pop axb_p2
+new NMOS
+pop axb_n1
+new NMOS
+pop axb_n2
+link axb_p1 VDD SOURCE
+link axb_p1 t1 CONTROL
+link axb_p1 axb DRAIN
+link axb_p2 VDD SOURCE
+link axb_p2 t2 CONTROL
+link axb_p2 axb DRAIN
+link axb_n1 axb SOURCE
+link axb_n1 t1 CONTROL
+link axb_n1 axb_mid DRAIN
+link axb_n2 axb_mid SOURCE
+link axb_n2 t2 CONTROL
+link axb_n2 VSS DRAIN
+new Wire
+pop naxbc_mid
+new Wire
+pop naxbc
+new PMOS
+pop naxbc_p1
+new PMOS
+pop naxbc_p2
+new NMOS
+pop naxbc_n1
+new NMOS
+pop naxbc_n2
+link naxbc_p1 VDD SOURCE
+link naxbc_p1 axb CONTROL
+link naxbc_p1 naxbc DRAIN
+link naxbc_p2 VDD SOURCE
+link naxbc_p2 Cin CONTROL
+link naxbc_p2 naxbc DRAIN
+link naxbc_n1 naxbc SOURCE
+link naxbc_n1 axb CONTROL
+link naxbc_n1 naxbc_mid DRAIN
+link naxbc_n2 naxbc_mid SOURCE
+link naxbc_n2 Cin CONTROL
+link naxbc_n2 VSS DRAIN
+new Wire
+pop t3_mid
+new Wire
+pop t3
+new PMOS
+pop t3_p1
+new PMOS
+pop t3_p2
+new NMOS
+pop t3_n1
+new NMOS
+pop t3_n2
+link t3_p1 VDD SOURCE
+link t3_p1 axb CONTROL
+link t3_p1 t3 DRAIN
+link t3_p2 VDD SOURCE
+link t3_p2 naxbc CONTROL
+link t3_p2 t3 DRAIN
+link t3_n1 t3 SOURCE
+link t3_n1 axb CONTROL
+link t3_n1 t3_mid DRAIN
+link t3_n2 t3_mid SOURCE
+link t3_n2 naxbc CONTROL
+link t3_n2 VSS DRAIN
+new Wire
+pop t4_mid
+new Wire
+pop t4
+new PMOS
+pop t4_p1
+new PMOS
+pop t4_p2
+new NMOS
+pop t4_n1
+new NMOS
+pop t4_n2
+link t4_p1 VDD SOURCE
+link t4_p1 Cin CONTROL
+link t4_p1 t4 DRAIN
+link t4_p2 VDD SOURCE
+link t4_p2 naxbc CONTROL
+link t4_p2 t4 DRAIN
+link t4_n1 t4 SOURCE
+link t4_n1 Cin CONTROL
+link t4_n1 t4_mid DRAIN
+link t4_n2 t4_mid SOURCE
+link t4_n2 naxbc CONTROL
+link t4_n2 VSS DRAIN
+new Wire
+pop Sum_mid
+new Wire
+pop Sum_int
+new PMOS
+pop sum_p1
+new PMOS
+pop sum_p2
+new NMOS
+pop sum_n1
+new NMOS
+pop sum_n2
+link sum_p1 VDD SOURCE
+link sum_p1 t3 CONTROL
+link sum_p1 Sum_int DRAIN
+link sum_p2 VDD SOURCE
+link sum_p2 t4 CONTROL
+link sum_p2 Sum_int DRAIN
+link sum_n1 Sum_int SOURCE
+link sum_n1 t3 CONTROL
+link sum_n1 Sum_mid DRAIN
+link sum_n2 Sum_mid SOURCE
+link sum_n2 t4 CONTROL
+link sum_n2 VSS DRAIN
+map Sum_int 5
+new Wire
+pop ncab_mid
+new Wire
+pop ncab
+new PMOS
+pop ncab_p1
+new PMOS
+pop ncab_p2
+new NMOS
+pop ncab_n1
+new NMOS
+pop ncab_n2
+link ncab_p1 VDD SOURCE
+link ncab_p1 Cin CONTROL
+link ncab_p1 ncab DRAIN
+link ncab_p2 VDD SOURCE
+link ncab_p2 axb CONTROL
+link ncab_p2 ncab DRAIN
+link ncab_n1 ncab SOURCE
+link ncab_n1 Cin CONTROL
+link ncab_n1 ncab_mid DRAIN
+link ncab_n2 ncab_mid SOURCE
+link ncab_n2 axb CONTROL
+link ncab_n2 VSS DRAIN
+new Wire
+pop Cout_mid
+new Wire
+pop Cout_int
+new PMOS
+pop cout_p1
+new PMOS
+pop cout_p2
+new NMOS
+pop cout_n1
+new NMOS
+pop cout_n2
+link cout_p1 VDD SOURCE
+link cout_p1 nab CONTROL
+link cout_p1 Cout_int DRAIN
+link cout_p2 VDD SOURCE
+link cout_p2 ncab CONTROL
+link cout_p2 Cout_int DRAIN
+link cout_n1 Cout_int SOURCE
+link cout_n1 nab CONTROL
+link cout_n1 Cout_mid DRAIN
+link cout_n2 Cout_mid SOURCE
+link cout_n2 ncab CONTROL
+link cout_n2 VSS DRAIN
+map Cout_int 6
 lock
